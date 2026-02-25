@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DDS Learning Portal</title>
+    <link rel="stylesheet" href="css/portal.css">
+</head>
+<body>
+    <div class="portal-container">
+        <!-- Left Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>📚 Contact Sessions</h2>
+                <div class="progress-summary">
+                    <div class="progress-bar-mini">
+                        <div class="progress-fill-mini" id="overallProgress"></div>
+                    </div>
+                    <span id="progressText">0% Complete</span>
+                </div>
+            </div>
+            <nav class="session-nav">
+                <button class="session-btn" data-cs="1">
+                    <span class="session-number">CS 1</span>
+                    <span class="session-title">Distributed Storage</span>
+                    <span class="session-status" id="cs1-status"></span>
+                </button>
+                <button class="session-btn" data-cs="2">
+                    <span class="session-number">CS 2</span>
+                    <span class="session-title">Storage Systems</span>
+                    <span class="session-status" id="cs2-status"></span>
+                </button>
+                <button class="session-btn" data-cs="3">
+                    <span class="session-number">CS 3</span>
+                    <span class="session-title">Distributed DBMS</span>
+                    <span class="session-status" id="cs3-status"></span>
+                </button>
+                <button class="session-btn" data-cs="4">
+                    <span class="session-number">CS 4</span>
+                    <span class="session-title">Architecture</span>
+                    <span class="session-status" id="cs4-status"></span>
+                </button>
+                <button class="session-btn" data-cs="5">
+                    <span class="session-number">CS 5</span>
+                    <span class="session-title">Database Design</span>
+                    <span class="session-status" id="cs5-status"></span>
+                </button>
+                <button class="session-btn" data-cs="6">
+                    <span class="session-number">CS 6</span>
+                    <span class="session-title">Schema Integration</span>
+                    <span class="session-status" id="cs6-status"></span>
+                </button>
+                <button class="session-btn" data-cs="7">
+                    <span class="session-number">CS 7</span>
+                    <span class="session-title">Data & Access Control</span>
+                    <span class="session-status" id="cs7-status"></span>
+                </button>
+                <button class="session-btn revision" data-cs="8">
+                    <span class="session-number">CS 8</span>
+                    <span class="session-title">Revision (CS 1-7)</span>
+                    <span class="session-status" id="cs8-status"></span>
+                </button>
+                <button class="session-btn coming-soon" data-cs="9">
+                    <span class="session-number">CS 9</span>
+                    <span class="session-title">Update Soon</span>
+                </button>
+                <button class="session-btn coming-soon" data-cs="10">
+                    <span class="session-number">CS 10</span>
+                    <span class="session-title">Update Soon</span>
+                </button>
+                <button class="session-btn coming-soon" data-cs="11">
+                    <span class="session-number">CS 11</span>
+                    <span class="session-title">Update Soon</span>
+                </button>
+                <button class="session-btn coming-soon" data-cs="12">
+                    <span class="session-number">CS 12</span>
+                    <span class="session-title">Update Soon</span>
+                </button>
+                <button class="session-btn coming-soon" data-cs="13">
+                    <span class="session-number">CS 13</span>
+                    <span class="session-title">Update Soon</span>
+                </button>
+                <button class="session-btn coming-soon" data-cs="14">
+                    <span class="session-number">CS 14</span>
+                    <span class="session-title">Update Soon</span>
+                </button>
+                <button class="session-btn coming-soon" data-cs="15">
+                    <span class="session-number">CS 15</span>
+                    <span class="session-title">Update Soon</span>
+                </button>
+                <button class="session-btn revision" data-cs="16">
+                    <span class="session-number">CS 16</span>
+                    <span class="session-title">Final Revision</span>
+                    <span class="session-status" id="cs16-status"></span>
+                </button>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="btn-icon" onclick="showNotes()" title="My Notes">
+                    <span>📝</span> Notes
+                </button>
+                <button class="btn-icon" onclick="showBookmarks()" title="Bookmarks">
+                    <span>🔖</span> Bookmarks
+                </button>
+                <button class="btn-icon" onclick="showSearch()" title="Search">
+                    <span>🔍</span> Search
+                </button>
+            </div>
+        </aside>
+        
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header with Search -->
+            <div class="content-header">
+                <h1 id="currentSessionTitle">Welcome to DDS Learning Portal</h1>
+                <div class="header-actions">
+                    <input type="text" id="searchBox" placeholder="Search concepts..." style="display: none;">
+                    <button class="btn-icon-small" onclick="toggleBookmark()" id="bookmarkBtn" title="Bookmark this topic" style="display: none;">
+                        <span>🔖</span>
+                    </button>
+                    <button class="btn-icon-small" onclick="window.location.href='index.html'" title="Back to subject home">
+                        <span>🏠</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Topic Tabs (Horizontal) -->
+            <div class="topic-tabs-container" id="topicTabsContainer" style="display: none;">
+                <div class="topic-tabs" id="topicTabs"></div>
+            </div>
+            
+            <!-- Content Display Area -->
+            <div class="content-area" id="contentArea">
+                <div class="welcome-screen">
+                    <h1>Welcome to DDS Learning Portal</h1>
+                    <p>Select a Content Session from the sidebar to begin learning.</p>
+                    <div class="welcome-features">
+                        <div class="feature-card">
+                            <span class="feature-icon">🎯</span>
+                            <h3>Interactive Learning</h3>
+                            <p>Engage with animations and simulations</p>
+                        </div>
+                        <div class="feature-card">
+                            <span class="feature-icon">🤖</span>
+                            <h3>AI Tutoring</h3>
+                            <p>Right-click on content to ask questions</p>
+                        </div>
+                        <div class="feature-card">
+                            <span class="feature-icon">📊</span>
+                            <h3>Progress Tracking</h3>
+                            <p>Track your learning journey</p>
+                        </div>
+                        <div class="feature-card">
+                            <span class="feature-icon">✅</span>
+                            <h3>AI Testing</h3>
+                            <p>Test your understanding after each session</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- AI Testing Section -->
+            <div class="ai-testing-section" id="aiTestingSection" style="display: none;">
+                <div class="ai-test-header">
+                    <h3>🤖 AI-Powered Testing</h3>
+                    <p>Test your understanding of this session</p>
+                </div>
+                <div class="ai-test-content" id="aiTestContent">
+                    <button onclick="startAITest()" class="btn-test">Start AI Test</button>
+                </div>
+            </div>
+            
+            <!-- Completion Button -->
+            <div class="completion-section" id="completionSection" style="display: none;">
+                <button onclick="markComplete()" class="btn-complete">
+                    <span>✅</span> Mark Session as Complete
+                </button>
+            </div>
+        </main>
+    </div>
+    
+    <!-- AI Tutor Context Menu -->
+    <div class="context-menu" id="contextMenu" style="display: none;">
+        <div class="context-menu-item" onclick="askAITutor()">
+            <span>💬 Ask AI Tutor</span>
+        </div>
+        <div class="context-menu-item" onclick="explainConcept()">
+            <span>📖 Explain Concept</span>
+        </div>
+        <div class="context-menu-item" onclick="getExample()">
+            <span>💡 Get Example</span>
+        </div>
+        <div class="context-menu-item" onclick="addToNotes()">
+            <span>📝 Add to Notes</span>
+        </div>
+    </div>
+    
+    <!-- AI Tutor Modal -->
+    <div class="modal" id="aiTutorModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🤖 AI Tutor</h3>
+                <button class="modal-close" onclick="closeAITutor()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="chat-messages" id="chatMessages"></div>
+                <div class="chat-input-container">
+                    <input type="text" id="chatInput" placeholder="Ask a question..." onkeypress="handleChatKeyPress(event)">
+                    <button onclick="sendChatMessage()" class="btn-send">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Notes Modal -->
+    <div class="modal" id="notesModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📝 My Notes</h3>
+                <button class="modal-close" onclick="closeNotes()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="notes-list" id="notesList"></div>
+                <textarea id="notesTextarea" placeholder="Add a new note..." rows="5"></textarea>
+                <button onclick="saveNote()" class="btn-primary">Save Note</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bookmarks Modal -->
+    <div class="modal" id="bookmarksModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🔖 Bookmarks</h3>
+                <button class="modal-close" onclick="closeBookmarks()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="bookmarks-list" id="bookmarksList"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/gemini-api.js"></script>
+    <script src="js/portal.js"></script>
+</body>
+</html>

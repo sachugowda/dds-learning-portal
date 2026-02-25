@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test - DDS Portal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #5568d3;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            white-space: pre-wrap;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 Gemini API Diagnostic Tool</h1>
+    
+    <div class="test-box">
+        <h2>Enter Your API Key</h2>
+        <input type="password" id="apiKey" placeholder="Paste your Gemini API key here">
+        <button onclick="testAPI()">Test API Connection</button>
+        <button onclick="testAllMethods()">Test All Methods</button>
+    </div>
+    
+    <div id="results"></div>
+    
+    <script>
+        async function testAPI() {
+            const apiKey = document.getElementById('apiKey').value.trim();
+            if (!apiKey) {
+                showResult('Please enter your API key', 'error');
+                return;
+            }
+            
+            showResult('Testing API connection...', 'info');
+            
+            const models = ['gemini-3-flash-preview', 'gemini-3-pro-preview'];
+            const methods = [
+                { name: 'Header Auth', useHeader: true },
+                { name: 'Query Param', useHeader: false }
+            ];
+            
+            let success = false;
+            let lastError = '';
+            
+            for (const method of methods) {
+                for (const model of models) {
+                    try {
+                        const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
+                        const headers = { 'Content-Type': 'application/json' };
+                        
+                        if (method.useHeader) {
+                            headers['x-goog-api-key'] = apiKey;
+                        }
+                        
+                        const requestUrl = method.useHeader ? url : `${url}?key=${apiKey}`;
+                        
+                        const response = await fetch(requestUrl, {
+                            method: 'POST',
+                            headers: headers,
+                            body: JSON.stringify({
+                                contents: [{
+                                    parts: [{ text: 'Say hello' }]
+                                }]
+                            })
+                        });
+                        
+                        const data = await response.json();
+                        
+                        if (response.ok) {
+                            showResult(`✅ SUCCESS!\n\nMethod: ${method.name}\nModel: ${model}\nResponse: ${data.candidates[0].content.parts[0].text}\n\nYour API key is working!`, 'success');
+                            success = true;
+                            return;
+                        } else {
+                            lastError = `Method: ${method.name}, Model: ${model}\nError: ${data.error?.message || 'Unknown error'}`;
+                            console.log(`Failed - ${lastError}`);
+                        }
+                    } catch (error) {
+                        lastError = `Method: ${method.name}, Model: ${model}\nError: ${error.message}`;
+                        console.log(`Error - ${lastError}`);
+                    }
+                }
+            }
+            
+            if (!success) {
+                showResult(`❌ All methods failed.\n\nLast error:\n${lastError}\n\nPlease check:\n1. Your API key is correct\n2. API key is active in Google AI Studio\n3. You have internet connection\n4. Try generating a new API key`, 'error');
+            }
+        }
+        
+        async function testAllMethods() {
+            const apiKey = document.getElementById('apiKey').value.trim();
+            if (!apiKey) {
+                showResult('Please enter your API key', 'error');
+                return;
+            }
+            
+            showResult('Testing all methods and models... This may take a moment.', 'info');
+            
+            const results = [];
+            const models = ['gemini-3-flash-preview', 'gemini-3-pro-preview'];
+            const methods = [
+                { name: 'Header Auth', useHeader: true },
+                { name: 'Query Param', useHeader: false }
+            ];
+            
+            for (const method of methods) {
+                for (const model of models) {
+                    try {
+                        const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
+                        const headers = { 'Content-Type': 'application/json' };
+                        
+                        if (method.useHeader) {
+                            headers['x-goog-api-key'] = apiKey;
+                        }
+                        
+                        const requestUrl = method.useHeader ? url : `${url}?key=${apiKey}`;
+                        
+                        const response = await fetch(requestUrl, {
+                            method: 'POST',
+                            headers: headers,
+                            body: JSON.stringify({
+                                contents: [{
+                                    parts: [{ text: 'Hello' }]
+                                }]
+                            })
+                        });
+                        
+                        const data = await response.json();
+                        
+                        if (response.ok) {
+                            results.push(`✅ ${method.name} + ${model}: SUCCESS`);
+                        } else {
+                            results.push(`❌ ${method.name} + ${model}: ${data.error?.message || 'Failed'}`);
+                        }
+                    } catch (error) {
+                        results.push(`❌ ${method.name} + ${model}: ${error.message}`);
+                    }
+                }
+            }
+            
+            showResult('Test Results:\n\n' + results.join('\n'), results.some(r => r.includes('✅')) ? 'success' : 'error');
+        }
+        
+        function showResult(message, type) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = `<div class="result ${type}">${message}</div>`;
+        }
+    </script>
+</body>
+</html>
